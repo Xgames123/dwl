@@ -1473,8 +1473,7 @@ dwl_output_printstatus_to(Monitor* monitor, DwlOutput *output)
 	zdwl_output_v1_send_active(output->resource, monitor == selmon);
 
 	for ( tag = 0 ; tag < LENGTH(tags); tag++) {
-		numclients = state = 0;
-		focused_client = -1;
+		numclients = state = focused_client = 0;
 		tagmask = 1 << tag;
 		if ((tagmask & monitor->tagset[monitor->seltags]) != 0)
 			state |= ZDWL_OUTPUT_V1_TAG_STATE_ACTIVE;
@@ -1485,7 +1484,7 @@ dwl_output_printstatus_to(Monitor* monitor, DwlOutput *output)
 			if (!(c->tags & tagmask))
 				continue;
 			if (c == focused)
-				focused_client = numclients;
+				focused_client = 1;
 			if (c->isurgent)
 				state |= ZDWL_OUTPUT_V1_TAG_STATE_URGENT;
 
