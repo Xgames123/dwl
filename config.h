@@ -6,8 +6,8 @@ static const int monoclegaps               = 0;  /* 1 means outer gaps in monocl
 static const unsigned int borderpx         = 4;  /* border pixel of windows */
 static const unsigned int gappih           = 10; /* horiz inner gap between windows */
 static const unsigned int gappiv           = 10; /* vert inner gap between windows */
-static const unsigned int gappoh           = 10; /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov           = 10; /* vert outer gap between windows and screen edge */
+static const unsigned int gappoh           = 0; /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov           = 0; /* vert outer gap between windows and screen edge */
 static const float bordercolor[]           = {0.066666, 0.066666, 0.066666, 1.0};
 static const float focuscolor[]            = {1.0, 0.835294, 0.627450, 1.0};
 /* To conform the xdg-protocol, set the alpha to zero to restore the old behavior */
@@ -27,7 +27,8 @@ static const Rule rules[] = {
 	/* examples:
 	{ "Gimp",     NULL,       0,            1,           -1 },
 	*/
-   { "no_empty_array",     NULL,       0,            1,           -1 },
+   { "firefox", "Library",   0,            1,           -1 },
+   { "firefox", "Firefox - Sharing Indicator",   0,            1,           -1 },
 };
 
 /* layout(s) */
@@ -45,7 +46,7 @@ static const MonitorRule monrules[] = {
 	{ "eDP-1",    0.5,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL },
 	*/
 	/* defaults */
-	{ NULL,       0.55, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL },
+	{ NULL,       0.55, 1,      1.2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL },
 };
 
 /* keyboard */
