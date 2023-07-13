@@ -17,6 +17,7 @@ static const float fullscreen_bg[]         = {0.1, 0.1, 0.1, 1.0};
 static const char *const autostart[] = {
         "fnott", NULL,
         "someblocks", NULL,
+        "onedriver", "~/OneDrive", NULL,
         NULL /* terminate */
 };
 
