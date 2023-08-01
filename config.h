@@ -124,13 +124,14 @@ static const char *volupcmd[]   = VOLUME("+1%");
 static const char *voldowncmd[] = VOLUME("-1%");
 static const char *termcmd[] = { "foot", NULL };
 static const char *menucmd[] = { "tofi-menu", NULL };
-
+static const char *screenshotcmd[] = { "screenshot", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ MODKEY,            XKB_KEY_XF86AudioLowerVolume, spawn,        {.v = volupcmd  } },
-	{ MODKEY,            XKB_KEY_XF86AudioRaiseVolume, spawn,        {.v = voldowncmd} },
+	{ 0,            XKB_KEY_XF86AudioLowerVolume, spawn,        {.v = volupcmd  } },
+	{ 0,            XKB_KEY_XF86AudioRaiseVolume, spawn,        {.v = voldowncmd} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,          spawn,          {.v = screenshotcmd} },
 	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_s,          spawn,          {.v = termcmd} },
 	{ MODKEY,                    XKB_KEY_n,          focusstack,     {.i = +1} },
