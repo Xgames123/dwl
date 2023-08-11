@@ -47,7 +47,7 @@ static const MonitorRule monrules[] = {
 	{ "eDP-1",    0.5,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL },
 	*/
 	/* defaults */
-	{ NULL,       0.55, 1,      1.2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL },
+	{ NULL,       0.55, 1,      1.3,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL },
 };
 
 /* keyboard */
@@ -129,8 +129,8 @@ static const char *screenshotcmd[] = { "screenshot", NULL };
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ 0,            XKB_KEY_XF86AudioLowerVolume, spawn,        {.v = volupcmd  } },
-	{ 0,            XKB_KEY_XF86AudioRaiseVolume, spawn,        {.v = voldowncmd} },
+	{ 0,            XKB_KEY_XF86AudioRaiseVolume, spawn,        {.v = volupcmd  } },
+	{ 0,            XKB_KEY_XF86AudioLowerVolume, spawn,        {.v = voldowncmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,          spawn,          {.v = screenshotcmd} },
 	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_s,          spawn,          {.v = termcmd} },
@@ -142,7 +142,7 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_plus,       setmfact,       {.f = +0.05} },
 	{ MODKEY,                    XKB_KEY_space,      zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_agrave,     view,           {0} },
-	{ MODKEY,                    XKB_KEY_k,          killclient,     {0} },
+	{ MODKEY,                    XKB_KEY_c,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
 	//{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
