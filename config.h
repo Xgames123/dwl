@@ -1,17 +1,19 @@
+#define COLOR(hex) \
+    { ((hex >> 24) & 0xFF) / 255.0f, ((hex >> 16) & 0xFF) / 255.0f, ((hex >> 8) & 0xFF) / 255.0f, (hex & 0xFF) / 255.0f }
 /* appearance */
 static const int sloppyfocus               = 0;  /* focus follows mouse */
 static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
 static const int smartgaps                 = 1;  /* 1 means no outer gap when there is only one window */
 static const int monoclegaps               = 0;  /* 1 means outer gaps in monocle layout */
-static const unsigned int borderpx         = 4;  /* border pixel of windows */
+static const unsigned int borderpx         = 2;  /* border pixel of windows */
 static const unsigned int gappih           = 10; /* horiz inner gap between windows */
 static const unsigned int gappiv           = 10; /* vert inner gap between windows */
 static const unsigned int gappoh           = 0; /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov           = 0; /* vert outer gap between windows and screen edge */
-static const float bordercolor[]           = {0.066666, 0.066666, 0.066666, 1.0};
-static const float focuscolor[]            = {1.0, 0.835294, 0.627450, 1.0};
+static const float bordercolor[]           = COLOR(0x666666ff);
+static const float focuscolor[]            = COLOR(0xffd5a0ff);
 /* To conform the xdg-protocol, set the alpha to zero to restore the old behavior */
-static const float fullscreen_bg[]         = {0.1, 0.1, 0.1, 1.0};
+static const float fullscreen_bg[]         = COLOR(0x111111ff); 
 
 /* Autostart */
 static const char *const autostart[] = {
@@ -24,12 +26,13 @@ static const char *const autostart[] = {
 static const int tagcount = 9;
 
 static const Rule rules[] = {
-	/* app_id     title       tags mask     isfloating   monitor */
+	/* app_id     title                                          tags mask     isfloating   monitor */
 	/* examples:
-	{ "Gimp",     NULL,       0,            1,           -1 },
+	{ "Gimp",     NULL,                                          0,            1,           -1 },
 	*/
-   { "firefox", "Library",   0,            1,           -1 },
-   { "firefox", "Firefox - Sharing Indicator",   0,            1,           -1 },
+   { "firefox", "Library",                                     0,            1,           -1 },
+   { "firefox", "Firefox - Sharing Indicator",                 0,            1,           -1 },
+   { "firefox", "Extension: (Tree Style Tab) - Close tabs?",   0,            1,           -1 },
 };
 
 /* layout(s) */
