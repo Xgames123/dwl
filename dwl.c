@@ -733,7 +733,7 @@ cleanup(void)
 	wl_display_destroy_clients(dpy);
 
 	/* kill child processes */
-	for (i = 0; i < autostart_len; i++) {
+	for ( int i = 0; i < autostart_len; i++) {
 		if (0 < autostart_pids[i]) {
 			kill(autostart_pids[i], SIGTERM);
 			waitpid(autostart_pids[i], NULL, 0);
