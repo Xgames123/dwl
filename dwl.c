@@ -1651,6 +1651,9 @@ mapnotify(struct wl_listener *listener, void *data)
 	wl_list_insert(&clients, &c->link);
 	wl_list_insert(&fstack, &c->flink);
 
+	c->geom.x = (m->w.width - c->geom.width) / 2 + m->m.x;
+	c->geom.y = (m->w.height - c->geom.height) / 2 + m->m.y;
+
 	/* Set initial monitor, tags, floating status, and focus:
 	 * we always consider floating, clients that have parent and thus
 	 * we set the same tags and monitor than its parent, if not
