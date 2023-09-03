@@ -17,6 +17,7 @@ static const float fullscreen_bg[]         = COLOR(0x111111ff);
 
 /* Autostart */
 static const char *const autostart[] = {
+        "/bin/sh", "-c", "$HOME/.dwlrc", NULL,
         "fnott", NULL,
         "someblocks", NULL,
         "/bin/sh", "-c", "onedriver $HOME/OneDrive", NULL,
