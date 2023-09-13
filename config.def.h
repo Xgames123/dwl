@@ -20,7 +20,8 @@ static const char *const autostart[] = {
 };
 
 /* tagging - tagcount must be no greater than 31 */
-static const int tagcount = 9;
+#define TAGCOUNT (9)
+static const int tagcount = TAGCOUNT;
 
 static const Rule rules[] = {
 	/* app_id     title       tags mask     isfloating   monitor */
