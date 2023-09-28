@@ -21,6 +21,7 @@ static const char *const autostart[] = {
         "fnott", NULL,
         "someblocks", NULL,
         "/bin/sh", "-c", "onedriver $HOME/OneDrive", NULL,
+        "swaybg", "--image", "~/Pictures/Wallpapers/arch1.png", NULL,
         NULL /* terminate */
 };
 
@@ -31,6 +32,8 @@ static const Rule rules[] = {
 	/* examples:
 	{ "Gimp",     NULL,                                          0,            1,           -1 },
 	*/
+   { "discord", NULL,                                          1 << 7,       0,           -1 },
+   { "firefox", NULL,                                          1 << 8,       0,           -1 },
    { "firefox", "Library",                                     0,            1,           -1 },
    { "firefox", "Firefox - Sharing Indicator",                 0,            1,           -1 },
    { "firefox", "Extension: (Tree Style Tab) - Close tabs?",   0,            1,           -1 },
@@ -143,7 +146,7 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_s,          spawn,          {.v = termcmd} },
 	{ MODKEY,                    XKB_KEY_n,          focusstack,     {.i = +1} },
-	{ MODKEY,                    XKB_KEY_p,          focusstack,     {.i = -1} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_N,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_equal,      setmfact,       {.f = -0.05} },
