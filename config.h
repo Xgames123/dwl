@@ -21,6 +21,8 @@ static const char *const autostart[] = {
         NULL /* terminate */
 };
 
+/* tagging - tagcount must be no greater than 31 */
+#define TAGCOUNT (9)
 static const int tagcount = 9;
 
 static const Rule rules[] = {
@@ -38,9 +40,9 @@ static const Rule rules[] = {
 /* layout(s) */
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[T]",      tile },
-	{ "[F]",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+	{ "[tile]",      tile },
+	{ "[float]",      NULL },    /* no layout function means floating behavior */
+	{ "[monocle]",      monocle },
 };
 
 /* monitors */
@@ -145,7 +147,8 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_N,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
-	{ MODKEY,                    XKB_KEY_equal,      setmfact,       {.f = -0.05} },
+	{ MODKEY,                    XKB_KEY_equal,      setmfact,       {.f = 1} },
+	{ MODKEY,                    XKB_KEY_minus,      setmfact,       {.f = -0.05} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_plus,       setmfact,       {.f = +0.05} },
 	{ MODKEY,                    XKB_KEY_space,      zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_agrave,     view,           {0} },
@@ -156,6 +159,7 @@ static const Key keys[] = {
 	//{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	//{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
 	//{ MODKEY,                    XKB_KEY_e,          togglefullscreen,{0} },
+  { MODKEY,                    XKB_KEY_b,          toggle_visibility, {0}},
 	{ MODKEY,                    XKB_KEY_agrave,     view,           {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_agrave,     tag,            {.ui = ~0} },
 	{ MODKEY,                    XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },

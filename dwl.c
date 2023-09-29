@@ -1332,8 +1332,8 @@ dwl_manager_bind(struct wl_client *client, void *data, uint32_t version, uint32_
 
 	wl_resource_set_implementation(resource, &dwl_manager_implementation, NULL, dwl_manager_destroy);
 
-	for (i = 0; i < LENGTH(tags); i++) {
-		zdwl_manager_v1_send_tag(resource, tags[i]);
+	for (i = 0; i < tagcount; i++) {
+		zdwl_manager_v1_send_tag(resource, "1");
 	}
 
 	for (i = 0; i < LENGTH(layouts); i++) {
