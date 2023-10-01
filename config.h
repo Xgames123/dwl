@@ -122,11 +122,14 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
-#define VOLUME(vol)  { "/bin/sh", "-c", "pactl set-sink-volume @DEFAULT_SINK@ " #vol " && /bin/kill -SIGRTMIN+1 $(ps -ef | awk '$8==\"someblocks\" {print $2}')", NULL }
+#define VOLUME(vol)  { "pactl", "set-sink-volume", "@DEFAULT_SINK@ " #vol , NULL }
+#define SOURCE_VOLUME(vol)  { "pactl", "set-source-volume", "@DEFAULT_SOURCE@ " #vol , NULL }
 
 /* commands */
 static const char *volupcmd[]   = VOLUME("+1%");
 static const char *voldowncmd[] = VOLUME("-1%");
+static const char *sourceupcmd[]   = SOURCE_VOLUME("+1%");
+static const char *sourcedowncmd[] = SOURCE_VOLUME("-1%");
 static const char *termcmd[] = { "foot", NULL };
 static const char *menucmd[] = { "sysmenu", NULL };
 static const char *passtypecmd[] = { "passbemenu", "type", NULL };
@@ -138,6 +141,8 @@ static const Key keys[] = {
 	/* modifier                  key                 function        argument */
 	{ 0,            XKB_KEY_XF86AudioRaiseVolume, spawn,        {.v = volupcmd  } },
 	{ 0,            XKB_KEY_XF86AudioLowerVolume, spawn,        {.v = voldowncmd} },
+	{ WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioRaiseVolume, spawn,{.v = sourceupcmd  } },
+	{ WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioLowerVolume, spawn,{.v = sourcedowncmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,          spawn,          {.v = screenshotcmd} },
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = passtypecmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_P,          spawn,          {.v = passclipcmd} },
