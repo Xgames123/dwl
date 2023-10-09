@@ -122,8 +122,8 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
-#define VOLUME(vol)  { "pactl", "set-sink-volume", "@DEFAULT_SINK@ " #vol , NULL }
-#define SOURCE_VOLUME(vol)  { "pactl", "set-source-volume", "@DEFAULT_SOURCE@ " #vol , NULL }
+#define VOLUME(vol) { "/bin/sh", "-c", "pactl set-sink-volume @DEFAULT_SINK@ " #vol "", NULL}
+#define SOURCE_VOLUME(vol) { "/bin/sh", "-c", "pactl set-source-volume @DEFAULT_SOURCE@ " #vol "", NULL}
 
 /* commands */
 static const char *volupcmd[]   = VOLUME("+1%");
