@@ -12,6 +12,7 @@ static const unsigned int gappoh           = 10; /* horiz outer gap between wind
 static const unsigned int gappov           = 0; /* vert outer gap between windows and screen edge */
 static const float bordercolor[]           = COLOR(0x666666ff);
 static const float focuscolor[]            = COLOR(0xffd5a0ff);
+static const float urgentcolor[]           = COLOR(0xea6962ff);
 /* To conform the xdg-protocol, set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = COLOR(0x111111ff); 
 
@@ -24,6 +25,9 @@ static const char *const autostart[] = {
 /* tagging - tagcount must be no greater than 31 */
 #define TAGCOUNT (9)
 static const int tagcount = 9;
+
+/* logging */
+static int log_level = WLR_ERROR;
 
 static const Rule rules[] = {
 	/* app_id     title                                          tags mask     isfloating   monitor */
