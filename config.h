@@ -165,7 +165,7 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_plus,       setmfact,       {.f = +0.05} },
 	{ MODKEY,                    XKB_KEY_space,      zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_agrave,     view,           {0} },
-	{ MODKEY,                    XKB_KEY_c,          killclient,     {0} },
+	{ MODKEY,                    XKB_KEY_q,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
 	//{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
@@ -188,7 +188,7 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_7, XKB_KEY_egrave,                     6),
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_exclam,                     7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_ccedilla,                   8),
-	{ MODKEY,                    XKB_KEY_q,          quit,           {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
 
 	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
 	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
