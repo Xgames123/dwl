@@ -40,6 +40,9 @@
 #include <wlr/types/wlr_screencopy_v1.h>
 #include <wlr/types/wlr_seat.h>
 #include <wlr/types/wlr_server_decoration.h>
+#include <wlr/types/wlr_tablet_v2.h>
+#include <wlr/types/wlr_tablet_pad.h>
+#include <wlr/types/wlr_tablet_tool.h>
 #include <wlr/types/wlr_session_lock_v1.h>
 #include <wlr/types/wlr_single_pixel_buffer_v1.h>
 #include <wlr/types/wlr_subcompositor.h>
@@ -149,6 +152,31 @@ typedef struct {
 	struct wl_listener destroy;
 } Keyboard;
 
+
+typedef struct {
+  struct wl_list link;
+	struct wlr_tablet_pad *tablet_pad;
+
+	struct wl_listener attach;
+	struct wl_listener button;
+	struct wl_listener ring;
+	struct wl_listener strip;
+
+	struct wlr_surface *current_surface;
+	struct wl_listener surface_destroy;
+
+	struct wl_listener destroy;
+} TabletPad;
+
+typedef struct  {
+  struct wlr_tablet_v2_tablet_tool *tablet_v2_tool;
+
+  double tilt_x, tilt_y;
+
+  struct wl_listener set_cursor;
+	struct wl_listener tool_destroy;
+} TabletTool;
+
 typedef struct {
 	/* Must keep these three elements in this order */
 	unsigned int type; /* LayerShell */
@@ -227,6 +255,7 @@ static void arrange(Monitor *m);
 static void arrangelayer(Monitor *m, struct wl_list *list,
 		struct wlr_box *usable_area, int exclusive);
 static void arrangelayers(Monitor *m);
+// static void attachtabletpad(struct TabletPad *tablet_pad, struct Tablet *tablet);
 static void axisnotify(struct wl_listener *listener, void *data);
 static void buttonpress(struct wl_listener *listener, void *data);
 static void chvt(const Arg *arg);
@@ -234,6 +263,7 @@ static void checkidleinhibitor(struct wlr_surface *exclude);
 static void cleanup(void);
 static void cleanupkeyboard(struct wl_listener *listener, void *data);
 static void cleanupmon(struct wl_listener *listener, void *data);
+static void cleanuptabletpad(struct wl_listener *listener, void *data);
 static void closemon(Monitor *m);
 static void commitlayersurfacenotify(struct wl_listener *listener, void *data);
 static void commitnotify(struct wl_listener *listener, void *data);
@@ -245,6 +275,7 @@ static void createlocksurface(struct wl_listener *listener, void *data);
 static void createmon(struct wl_listener *listener, void *data);
 static void createnotify(struct wl_listener *listener, void *data);
 static void createpointer(struct wlr_pointer *pointer);
+static void createtabletpad(struct wlr_tablet_pad *tablet);
 static void cursorframe(struct wl_listener *listener, void *data);
 static void destroydragicon(struct wl_listener *listener, void *data);
 static void destroyidleinhibitor(struct wl_listener *listener, void *data);
@@ -336,6 +367,7 @@ static struct wlr_renderer *drw;
 static struct wlr_allocator *alloc;
 static struct wlr_compositor *compositor;
 
+static struct wlr_tablet_manager_v2 *tablet_mgr_v2;
 static struct wlr_xdg_shell *xdg_shell;
 static struct wlr_xdg_activation_v1 *activation;
 static struct wlr_xdg_decoration_manager_v1 *xdg_decoration_mgr;
@@ -358,6 +390,7 @@ static struct wlr_session_lock_v1 *cur_lock;
 
 static struct wlr_seat *seat;
 static struct wl_list keyboards;
+static struct wl_list tablet_pads;
 static unsigned int cursor_mode;
 static Client *grabc;
 static int grabcx, grabcy; /* client-relative */
@@ -553,6 +586,16 @@ arrangelayers(Monitor *m)
 	}
 }
 
+/* void
+attachtabletpad(struct TabletPad *tablet_pad, struct Tablet *tablet){
+  tablet_pad->tablet = tablet;
+
+	wl_list_remove(&tablet_pad->tablet_destroy.link);
+	tablet_pad->tablet_destroy.notify = cleanuptabletpad;
+	wl_signal_add(&tablet->tablet_v2->wlr_device->events.destroy,
+		&tablet_pad->tablet_destroy);
+} */
+
 void
 axisnotify(struct wl_listener *listener, void *data)
 {
@@ -705,6 +748,16 @@ cleanupmon(struct wl_listener *listener, void *data)
 
 	closemon(m);
 	free(m);
+}
+
+void
+cleanuptabletpad(struct wl_listener *listener, void *data)
+{
+  printf("Cleaning up tablet pad");
+  TabletPad *tpad = wl_container_of(listener, tpad, destroy);
+	wl_list_remove(&tpad->link);
+	wl_list_remove(&tpad->destroy.link);
+	free(tpad);
 }
 
 void
@@ -1059,6 +1112,18 @@ createpointer(struct wlr_pointer *pointer)
 }
 
 void
+createtabletpad(struct wlr_tablet_pad *tablet)
+{
+  
+	TabletPad *tpad = ecalloc(1, sizeof(TabletPad));
+  tpad->tablet_pad = tablet;
+
+	//LISTEN(&tablet->events.destroy, &tpad->destroy, cleanuptabletpad);
+
+  wl_list_insert(&tablet_pads, &tpad->link);
+}
+
+void
 cursorframe(struct wl_listener *listener, void *data)
 {
 	/* This event is forwarded by the cursor when a pointer emits an frame
@@ -1364,7 +1429,8 @@ inputdevice(struct wl_listener *listener, void *data)
 	 * available. */
 	struct wlr_input_device *device = data;
 	uint32_t caps;
-
+  
+  wlr_log(WLR_INFO, "New input device %d", device->type);
 	switch (device->type) {
 	case WLR_INPUT_DEVICE_KEYBOARD:
 		createkeyboard(wlr_keyboard_from_input_device(device));
@@ -1372,6 +1438,13 @@ inputdevice(struct wl_listener *listener, void *data)
 	case WLR_INPUT_DEVICE_POINTER:
 		createpointer(wlr_pointer_from_input_device(device));
 		break;
+  case WLR_INPUT_DEVICE_TABLET_PAD:
+    wlr_log(WLR_INFO, "Creating tablet pad");
+    createtabletpad(wlr_tablet_pad_from_input_device(device));
+    break;
+  /* case WLR_INPUT_DEVICE_TABLET_TOOL:
+    createtablettool(wlr_tablet_tool_from_input_device(device));
+    break; */
 	default:
 		/* TODO handle other input device types */
 		break;
@@ -2225,6 +2298,7 @@ setup(void)
 	xdg_shell = wlr_xdg_shell_create(dpy, 4);
 	wl_signal_add(&xdg_shell->events.new_surface, &new_xdg_surface);
 
+
 	input_inhibit_mgr = wlr_input_inhibit_manager_create(dpy);
 	session_lock_mgr = wlr_session_lock_manager_v1_create(dpy);
 	wl_signal_add(&session_lock_mgr->events.new_lock, &session_lock_create_lock);
@@ -2278,6 +2352,9 @@ setup(void)
 	 * pointer, touch, and drawing tablet device. We also rig up a listener to
 	 * let us know when new input devices are available on the backend.
 	 */
+  tablet_mgr_v2 = wlr_tablet_v2_create(dpy);
+  wl_list_init(&tablet_pads);
+
 	wl_list_init(&keyboards);
 	wl_signal_add(&backend->events.new_input, &new_input);
 	virtual_keyboard_mgr = wlr_virtual_keyboard_manager_v1_create(dpy);
