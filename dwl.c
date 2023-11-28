@@ -14,6 +14,8 @@
 #include <wayland-server-core.h>
 #include <wlr/backend.h>
 #include <wlr/backend/libinput.h>
+#include <wlr/backend/multi.h>
+#include <wlr/backend/drm.h>
 #include <wlr/render/allocator.h>
 #include <wlr/render/wlr_renderer.h>
 #include <wlr/types/wlr_compositor.h>
@@ -1430,7 +1432,8 @@ inputdevice(struct wl_listener *listener, void *data)
 	struct wlr_input_device *device = data;
 	uint32_t caps;
   
-  wlr_log(WLR_INFO, "New input device %d", device->type);
+  printf("New input device\n");
+  wlr_log(WLR_DEBUG, "New input device %d", device->type);
 	switch (device->type) {
 	case WLR_INPUT_DEVICE_KEYBOARD:
 		createkeyboard(wlr_keyboard_from_input_device(device));
@@ -1439,7 +1442,7 @@ inputdevice(struct wl_listener *listener, void *data)
 		createpointer(wlr_pointer_from_input_device(device));
 		break;
   case WLR_INPUT_DEVICE_TABLET_PAD:
-    wlr_log(WLR_INFO, "Creating tablet pad");
+    wlr_log(WLR_DEBUG, "Creating tablet pad");
     createtabletpad(wlr_tablet_pad_from_input_device(device));
     break;
   /* case WLR_INPUT_DEVICE_TABLET_TOOL:
@@ -1447,6 +1450,9 @@ inputdevice(struct wl_listener *listener, void *data)
     break; */
 	default:
 		/* TODO handle other input device types */
+    //DEBUG CODE
+    wlr_log(WLR_DEBUG, "Unknown input device with type %d", device->type);
+    //END DEBUG CODE
 		break;
 	}
 
@@ -2202,6 +2208,21 @@ setsel(struct wl_listener *listener, void *data)
 	wlr_seat_set_selection(seat, event->source, event->serial);
 }
 
+//DEBUG CODE
+void
+for_each_backend(struct wlr_backend *backend, void *data){
+  if (wlr_backend_is_libinput(backend)){
+    wlr_log(WLR_INFO, "libinput backend found");
+    return;
+  }
+  if (wlr_backend_is_drm(backend)){
+    wlr_log(WLR_INFO, "drm backend found");
+    return;
+  }
+  wlr_log(WLR_INFO, "other backend found");
+}
+//END DEBUG CODE
+
 void
 setup(void)
 {
@@ -2228,6 +2249,14 @@ setup(void)
 	 * don't). */
 	if (!(backend = wlr_backend_autocreate(dpy)))
 		die("couldn't create backend");
+  
+  //DEBUG CODE
+  if (wlr_backend_is_multi(backend)){
+    wlr_log(WLR_INFO, "backend is multi backend");
+    wlr_multi_for_each_backend(backend, for_each_backend, NULL);
+  }
+  //END DEBUG CODE
+
 
 	/* Initialize the scene graph used to lay out windows */
 	scene = wlr_scene_create();
@@ -2352,8 +2381,6 @@ setup(void)
 	 * pointer, touch, and drawing tablet device. We also rig up a listener to
 	 * let us know when new input devices are available on the backend.
 	 */
-  tablet_mgr_v2 = wlr_tablet_v2_create(dpy);
-  wl_list_init(&tablet_pads);
 
 	wl_list_init(&keyboards);
 	wl_signal_add(&backend->events.new_input, &new_input);
@@ -2361,6 +2388,8 @@ setup(void)
 	wl_signal_add(&virtual_keyboard_mgr->events.new_virtual_keyboard,
 			&new_virtual_keyboard);
 	seat = wlr_seat_create(dpy, "seat0");
+  tablet_mgr_v2 = wlr_tablet_v2_create(dpy);
+  wl_list_init(&tablet_pads);
 	wl_signal_add(&seat->events.request_set_cursor, &request_cursor);
 	wl_signal_add(&seat->events.request_set_selection, &request_set_sel);
 	wl_signal_add(&seat->events.request_set_primary_selection, &request_set_psel);
