@@ -418,7 +418,6 @@ static struct wl_list mons;
 static Monitor *selmon;
 
 static int enablegaps = 1;   /* enables gaps, used by togglegaps */
-static void (*resize)(Client *c, struct wlr_box geo, int interact) = resizeapply;
 
 /* global event handlers */
 static struct wl_listener cursor_axis = {.notify = axisnotify};
@@ -555,18 +554,16 @@ arrange(Monitor *m)
 			m->w.width  -= m->gappih + 2 * m->gappoh;
 			m->w.height -= m->gappiv + 2 * m->gappov;
 		}
-		resize = resizenoapply;
 		m->lt[m->sellt]->arrange(m);
 		wl_list_for_each(c, &clients, link) {
 			if (!VISIBLEON(c, m) || c->isfloating || c->isfullscreen)
 				continue;
 			if (enablegaps)
 				applygaps(c);
-			resizeapply(c, c->geom, c->interact);
+			resize(c, c->geom, c->interact);
 		}
 		m->w.width  = save_width;
 		m->w.height = save_height;
-		resize = resizeapply;
 	}
 	motionnotify(0);
 	checkidleinhibitor(NULL);
@@ -1619,9 +1616,9 @@ void focusdir(const Arg *arg)
 	if (!sel || sel->isfullscreen)
 		return;
   
-  int dist=INT_MAX;
+  int dist=0;
   Client *newsel = NULL;
-  int newdist=INT_MAX;
+  int newdist=0;
   wl_list_for_each(c, &clients, link) {
     if (!VISIBLEON(c, selmon))
       continue; /* skip non visible windows */
@@ -2551,6 +2548,7 @@ setgaps(int oh, int ov, int ih, int iv)
 	arrange(selmon);
 }
 
+void
 setgamma(struct wl_listener *listener, void *data)
 {
 	struct wlr_gamma_control_manager_v1_set_gamma_event *event = data;
