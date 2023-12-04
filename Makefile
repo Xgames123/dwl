@@ -5,7 +5,7 @@ include config.mk
 
 # flags for compiling
 DWLCPPFLAGS = -I. -DWLR_USE_UNSTABLE -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" $(XWAYLAND)
-DWLDEVCFLAGS = -pedantic -Wall -Wextra -Wdeclaration-after-statement -Wno-unused-parameter -Wno-sign-compare -Wshadow -Wunused-macros\
+DWLDEVCFLAGS = -g -pedantic -Wall -Wextra -Wdeclaration-after-statement -Wno-unused-parameter -Wno-sign-compare -Wshadow -Wunused-macros\
 	-Werror=strict-prototypes -Werror=implicit -Werror=return-type -Werror=incompatible-pointer-types
 
 # CFLAGS / LDFLAGS
@@ -14,9 +14,15 @@ DWLCFLAGS = `$(PKG_CONFIG) --cflags $(PKGS)` $(DWLCPPFLAGS) $(DWLDEVCFLAGS) $(CF
 LDLIBS    = `$(PKG_CONFIG) --libs $(PKGS)` $(LIBS)
 
 all: dwl
+<<<<<<< HEAD
 dwl: dwl.o util.o dwl-bar-ipc-unstable-v1-protocol.o
 	$(CC) dwl.o util.o dwl-bar-ipc-unstable-v1-protocol.o $(LDLIBS) $(LDFLAGS) $(DWLCFLAGS) -o $@
 dwl.o: dwl.c config.mk config.h client.h xdg-shell-protocol.h wlr-layer-shell-unstable-v1-protocol.h dwl-bar-ipc-unstable-v1-protocol.h
+=======
+dwl: dwl.o util.o
+	$(CC) dwl.o util.o $(LDLIBS) $(LDFLAGS) $(DWLCFLAGS) -o $@
+dwl.o: dwl.c config.mk config.h client.h cursor-shape-v1-protocol.h xdg-shell-protocol.h wlr-layer-shell-unstable-v1-protocol.h
+>>>>>>> main
 util.o: util.c util.h
 dwl-bar-ipc-unstable-v1-protocol.o: dwl-bar-ipc-unstable-v1-protocol.c dwl-bar-ipc-unstable-v1-protocol.h
 
@@ -38,6 +44,9 @@ dwl-bar-ipc-unstable-v1-protocol.h:
 dwl-bar-ipc-unstable-v1-protocol.c:
 	$(WAYLAND_SCANNER) private-code \
 		protocols/dwl-bar-ipc-unstable-v1.xml $@
+cursor-shape-v1-protocol.h:
+	$(WAYLAND_SCANNER) server-header \
+		$(WAYLAND_PROTOCOLS)/staging/cursor-shape/cursor-shape-v1.xml $@
 
 config.h:
 	cp config.def.h $@
@@ -46,7 +55,7 @@ clean:
 
 dist: clean
 	mkdir -p dwl-$(VERSION)
-	cp -R LICENSE* Makefile README.md client.h config.def.h\
+	cp -R LICENSE* Makefile CHANGELOG.md README.md client.h config.def.h\
 		config.mk protocols dwl.1 dwl.c util.c util.h dwl.desktop\
 		dwl-$(VERSION)
 	tar -caf dwl-$(VERSION).tar.gz dwl-$(VERSION)
