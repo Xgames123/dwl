@@ -327,23 +327,17 @@ static void printstatus(void);
 static void quit(const Arg *arg);
 static void rendermon(struct wl_listener *listener, void *data);
 static void requeststartdrag(struct wl_listener *listener, void *data);
-<<<<<<< HEAD
 static void resizeapply(Client *c, struct wlr_box geo, int interact);
 static void resizenoapply(Client *c, struct wlr_box geo, int interact);
-=======
 static void requestmonstate(struct wl_listener *listener, void *data);
 static void resize(Client *c, struct wlr_box geo, int interact);
->>>>>>> main
 static void run(char *startup_cmd);
 static void setcursor(struct wl_listener *listener, void *data);
 static void setcursorshape(struct wl_listener *listener, void *data);
 static void setfloating(Client *c, int floating);
 static void setfullscreen(Client *c, int fullscreen);
-<<<<<<< HEAD
 static void setgaps(int oh, int ov, int ih, int iv);
-=======
 static void setgamma(struct wl_listener *listener, void *data);
->>>>>>> main
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setmon(Client *c, Monitor *m, uint32_t newtags);
@@ -423,7 +417,6 @@ static struct wlr_box sgeom;
 static struct wl_list mons;
 static Monitor *selmon;
 
-<<<<<<< HEAD
 static int enablegaps = 1;   /* enables gaps, used by togglegaps */
 static void (*resize)(Client *c, struct wlr_box geo, int interact) = resizeapply;
 
@@ -456,8 +449,6 @@ static struct wl_listener start_drag = {.notify = startdrag};
 static struct wl_listener session_lock_create_lock = {.notify = locksession};
 static struct wl_listener session_lock_mgr_destroy = {.notify = destroysessionmgr};
 
-=======
->>>>>>> main
 #ifdef XWAYLAND
 static void activatex11(struct wl_listener *listener, void *data);
 static void associatex11(struct wl_listener *listener, void *data);
@@ -1018,7 +1009,6 @@ createmon(struct wl_listener *listener, void *data)
 	m = wlr_output->data = ecalloc(1, sizeof(*m));
 	m->wlr_output = wlr_output;
 
-<<<<<<< HEAD
 	wl_list_init(&m->dwl_outputs);
 	wlr_output_init_render(wlr_output, alloc, drw);
 
@@ -1030,13 +1020,6 @@ createmon(struct wl_listener *listener, void *data)
 	m->gappiv = gappiv;
 	m->gappoh = gappoh;
 	m->gappov = gappov;
-=======
-	for (i = 0; i < LENGTH(m->layers); i++)
-		wl_list_init(&m->layers[i]);
-
-	wlr_output_state_init(&state);
-	/* Initialize monitor state using configured rules */
->>>>>>> main
 	m->tagset[0] = m->tagset[1] = 1;
 	for (r = monrules; r < END(monrules); r++) {
 		if (!r->name || strstr(wlr_output->name, r->name)) {
@@ -2395,9 +2378,6 @@ requeststartdrag(struct wl_listener *listener, void *data)
 }
 
 void
-<<<<<<< HEAD
-resizeapply(Client *c, struct wlr_box geo, int interact)
-=======
 requestmonstate(struct wl_listener *listener, void *data)
 {
 	struct wlr_output_event_request_state *event = data;
@@ -2407,7 +2387,6 @@ requestmonstate(struct wl_listener *listener, void *data)
 
 void
 resize(Client *c, struct wlr_box geo, int interact)
->>>>>>> main
 {
 	struct wlr_box *bbox = interact ? &sgeom : &c->mon->w;
 	struct wlr_box clip;
@@ -2563,7 +2542,6 @@ setfullscreen(Client *c, int fullscreen)
 }
 
 void
-<<<<<<< HEAD
 setgaps(int oh, int ov, int ih, int iv)
 {
 	selmon->gappoh = MAX(oh, 0);
@@ -2571,14 +2549,14 @@ setgaps(int oh, int ov, int ih, int iv)
 	selmon->gappih = MAX(ih, 0);
 	selmon->gappiv = MAX(iv, 0);
 	arrange(selmon);
-=======
+}
+
 setgamma(struct wl_listener *listener, void *data)
 {
 	struct wlr_gamma_control_manager_v1_set_gamma_event *event = data;
 	Monitor *m = event->output->data;
 	m->gamma_lut_changed = 1;
 	wlr_output_schedule_frame(m->wlr_output);
->>>>>>> main
 }
 
 void

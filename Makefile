@@ -14,15 +14,9 @@ DWLCFLAGS = `$(PKG_CONFIG) --cflags $(PKGS)` $(DWLCPPFLAGS) $(DWLDEVCFLAGS) $(CF
 LDLIBS    = `$(PKG_CONFIG) --libs $(PKGS)` $(LIBS)
 
 all: dwl
-<<<<<<< HEAD
 dwl: dwl.o util.o dwl-bar-ipc-unstable-v1-protocol.o
 	$(CC) dwl.o util.o dwl-bar-ipc-unstable-v1-protocol.o $(LDLIBS) $(LDFLAGS) $(DWLCFLAGS) -o $@
 dwl.o: dwl.c config.mk config.h client.h xdg-shell-protocol.h wlr-layer-shell-unstable-v1-protocol.h dwl-bar-ipc-unstable-v1-protocol.h
-=======
-dwl: dwl.o util.o
-	$(CC) dwl.o util.o $(LDLIBS) $(LDFLAGS) $(DWLCFLAGS) -o $@
-dwl.o: dwl.c config.mk config.h client.h cursor-shape-v1-protocol.h xdg-shell-protocol.h wlr-layer-shell-unstable-v1-protocol.h
->>>>>>> main
 util.o: util.c util.h
 dwl-bar-ipc-unstable-v1-protocol.o: dwl-bar-ipc-unstable-v1-protocol.c dwl-bar-ipc-unstable-v1-protocol.h
 
