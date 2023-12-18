@@ -48,8 +48,7 @@ static const Rule rules[] = {
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[tile]",      tile },
-	{ "[float]",      NULL },    /* no layout function means floating behavior */
-	{ "[monocle]",      monocle },
+	{ "[monocle]",    monocle },
 };
 
 /* monitors */
@@ -132,6 +131,27 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define VOLUME(vol) { "/bin/sh", "-c", "pactl set-sink-volume @DEFAULT_SINK@ " #vol "", NULL}
 #define SOURCE_VOLUME(vol) { "/bin/sh", "-c", "pactl set-source-volume @DEFAULT_SOURCE@ " #vol "", NULL}
 
+/* yambar */
+static int yambar_enabled=true;
+
+static const char *kill_yambar[] = { "killall", "yambar", NULL};
+static const char *spawn_yambar[] = { "yambar", NULL};
+
+void
+toggle_yambar(const Arg *arg)
+{
+	const char **cmd = kill_yambar;
+  if (!yambar_enabled){
+    cmd = spawn_yambar;
+  }
+	if (fork() == 0) {
+		setsid();
+		execvp(*cmd, (char *const *)cmd);
+	}
+  yambar_enabled=!yambar_enabled;
+}
+
+
 /* commands */
 static const char *volupcmd[]   = VOLUME("+1%");
 static const char *voldowncmd[] = VOLUME("-1%");
@@ -147,8 +167,8 @@ static const char *noticmd[] = { "fnottmgr", NULL };
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ 0,            XKB_KEY_XF86AudioRaiseVolume, spawn,        {.v = volupcmd  } },
-	{ 0,            XKB_KEY_XF86AudioLowerVolume, spawn,        {.v = voldowncmd} },
+	{ 0,            XKB_KEY_XF86AudioRaiseVolume, spawn,             {.v = volupcmd  } },
+	{ 0,            XKB_KEY_XF86AudioLowerVolume, spawn,             {.v = voldowncmd} },
 	{ WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioRaiseVolume, spawn,{.v = sourceupcmd  } },
 	{ WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioLowerVolume, spawn,{.v = sourcedowncmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,          spawn,          {.v = screenshotcmd} },
@@ -157,6 +177,7 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_P,          spawn,          {.v = passclipcmd} },
 	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_s,          spawn,          {.v = termcmd} },
+	{ MODKEY,                    XKB_KEY_y,          toggle_yambar,  {0} },
 	{ MODKEY,                    XKB_KEY_n,          focusstack,     {.i = +1} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_N,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_h,          focusdir,       {.ui = 0} },
@@ -173,7 +194,7 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_q,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
 	//{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[1]} },
 	//{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	//{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
 	//{ MODKEY,                    XKB_KEY_e,          togglefullscreen,{0} },
