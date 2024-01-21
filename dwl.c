@@ -2812,7 +2812,8 @@ tagmon(const Arg *arg)
 void
 tile(Monitor *m)
 {
-	unsigned int i, n = 0, h, r, oe = enablegaps, ie = enablegaps, mw, my, ty;
+	unsigned int mw, my, ty, h, r, oe=enablegaps, ie=enablegaps;
+	int i, n = 0;
 	Client *c;
 
 	wl_list_for_each(c, &clients, link)
@@ -2825,6 +2826,10 @@ tile(Monitor *m)
 		oe = 0; // outer gaps disabled
 	}
 
+  if (smartgaps == n){
+    oe=0; //outer gaps disabled
+  }
+
 	if (n > m->nmaster)
 		mw = m->nmaster ? (m->w.width + m->gappiv*ie) * m->mfact : 0;
 	else
@@ -2835,17 +2840,17 @@ tile(Monitor *m)
 		if (!VISIBLEON(c, m) || c->isfloating || c->isfullscreen)
 			continue;
 		if (i < m->nmaster) {
-			r = MIN(n, m->nmaster) - i;
-			h = (m->w.height - my - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
-			resize(c, (struct wlr_box){.x = m->w.x + m->gappov*oe, .y = m->w.y + my,
-				.width = mw - m->gappiv*ie, .height = h}, 0);
-			my += c->geom.height + m->gappih*ie;
+      r = MIN(n, m->nmaster) - i;
+      h = (m->w.height - my - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
+      resize(c, (struct wlr_box){.x = m->w.x + m->gappov*oe, .y = m->w.y + my,
+          .width = mw - m->gappiv*ie, .height = h}, 0);
+      my += c->geom.height + m->gappih*ie;
 		} else {
-			r = n - i;
-			h = (m->w.height - ty - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
-			resize(c, (struct wlr_box){.x = m->w.x + mw + m->gappov*oe, .y = m->w.y + ty,
-				.width = m->w.width - mw - 2*m->gappov*oe, .height = h}, 0);
-			ty += c->geom.height + m->gappih*ie;
+      r = n - i;
+      h = (m->w.height - ty - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
+      resize(c, (struct wlr_box){.x = m->w.x + mw + m->gappov*oe, .y = m->w.y + ty,
+          .width = m->w.width - mw - 2*m->gappov*oe, .height = h}, 0);
+      ty += c->geom.height + m->gappih*ie;
 		}
 		i++;
 	}
