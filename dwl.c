@@ -2831,12 +2831,12 @@ tile(Monitor *m)
   }
 
 	if (n > m->nmaster)
-		mw = m->nmaster ? (m->w.width + m->gappiv*ie) * m->mfact : 0;
+		mw = m->nmaster ? ROUND((m->w.width + m->gappiv*ie)*m->mfact) : 0;
 	else
-		mw = m->w.width - 2*m->gappov*oe + m->gappiv*ie;
-	i = 0;
-	my = ty = m->gappoh*oe;
-	wl_list_for_each(c, &clients, link) {
+    mw = m->w.width - 2*m->gappov*oe + m->gappiv*ie;
+  i = 0;
+  my = ty = m->gappoh*oe;
+  wl_list_for_each(c, &clients, link) {
 		if (!VISIBLEON(c, m) || c->isfloating || c->isfullscreen)
 			continue;
 		if (i < m->nmaster) {
