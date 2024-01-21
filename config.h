@@ -162,6 +162,7 @@ static const char *menucmd[] = { "sysmenu", NULL };
 static const char *passtypecmd[] = { "passbemenu", "type", NULL };
 static const char *passclipcmd[] = { "passbemenu", "clip", NULL };
 static const char *screenshotcmd[] = { "screenshot", NULL };
+static const char *screenreccmd[] = { "screenshot", "-r", NULL };
 static const char *noticmd[] = { "fnottmgr", NULL };
 
 static const Key keys[] = {
@@ -172,6 +173,7 @@ static const Key keys[] = {
 	{ WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioRaiseVolume, spawn,{.v = sourceupcmd  } },
 	{ WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioLowerVolume, spawn,{.v = sourcedowncmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,          spawn,          {.v = screenshotcmd} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_R,          spawn,          {.v = screenreccmd} },
 	{ MODKEY,                    XKB_KEY_f,          spawn,          {.v = noticmd} },
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = passtypecmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_P,          spawn,          {.v = passclipcmd} },
