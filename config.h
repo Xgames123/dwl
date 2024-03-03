@@ -160,7 +160,7 @@ static const char *sourcedowncmd[] = SOURCE_VOLUME("-1%");
 static const char *termcmd[] = { "foot", NULL };
 static const char *menucmd[] = { "sysmenu", NULL };
 static const char *passtypecmd[] = { "passbemenu", "type", NULL };
-static const char *passclipcmd[] = { "passbemenu", "clip", NULL };
+static const char *passcmd[] = { "passbemenu", NULL };
 static const char *screenshotcmd[] = { "screenshot", NULL };
 static const char *screenreccmd[] = { "screenshot", "-r", NULL };
 static const char *noticmd[] = { "fnottmgr", NULL };
@@ -176,7 +176,7 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_R,          spawn,          {.v = screenreccmd} },
 	{ MODKEY,                    XKB_KEY_f,          spawn,          {.v = noticmd} },
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = passtypecmd} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_P,          spawn,          {.v = passclipcmd} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_P,          spawn,          {.v = passcmd} },
 	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_s,          spawn,          {.v = termcmd} },
 	{ MODKEY,                    XKB_KEY_y,          toggle_yambar,  {0} },
