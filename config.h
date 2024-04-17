@@ -27,7 +27,7 @@ static const char *const autostart[] = {
 static const int tagcount = 9;
 
 /* logging */
-static int log_level = WLR_ERROR;
+static int log_level = WLR_INFO;
 
 static const Rule rules[] = {
 	/* app_id     title                                          tags mask     isfloating   monitor */
