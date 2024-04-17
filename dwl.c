@@ -2534,7 +2534,7 @@ setup(void)
 
 	/* Initialize the scene graph used to lay out windows */
 	scene = wlr_scene_create();
-	root_bg = wlr_scene_rect_create(&scene->tree, 0, 0, rootcolor);
+	root_bg = wlr_scene_rect_create(&scene->tree, 0, 0, fullscreen_bg);
 	for (i = 0; i < NUM_LAYERS; i++)
 		layers[i] = wlr_scene_tree_create(&scene->tree);
 	drag_icon = wlr_scene_tree_create(&scene->tree);
